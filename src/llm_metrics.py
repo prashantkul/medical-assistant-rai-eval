@@ -8,7 +8,7 @@ These replace the simple baseline metrics with LLM-powered evaluation.
 from abc import ABC, abstractmethod
 from typing import Dict, Any
 import os
-from llm_client_groq import get_groq_client as get_llm_client
+from .llm_client_groq import get_groq_client as get_llm_client
 
 # Using Groq for LLM-as-a-Judge evaluation
 LLM_PROVIDER = "Groq (GPT-OSS 120B)"

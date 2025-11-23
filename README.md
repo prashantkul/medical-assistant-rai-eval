@@ -58,7 +58,7 @@ Get a **free** API key at: https://console.groq.com/
 ### 3. Run the Medical Assistant Demo
 
 ```bash
-python medical_assistant_example.py
+python -m examples.medical_assistant_example
 ```
 
 This will run three demonstrations:
@@ -115,24 +115,32 @@ The evaluation framework provides color-coded output for easy interpretation:
 ## Project Structure
 
 ```
-hallucination-detect/
-├── data/
+├── src/                           # Core source code
+│   ├── __init__.py               # Package initialization
+│   ├── evaluator.py              # Evaluation framework with colorized output
+│   ├── llm_client_groq.py        # Groq API wrapper (GPT-OSS 120B)
+│   ├── llm_metrics.py            # LLM-as-a-Judge metrics (8 metrics)
+│   ├── rag_system.py             # RAG implementation with ChromaDB
+│   └── metrics.py                # Simple baseline metrics
+│
+├── examples/                      # Example scripts
+│   ├── medical_assistant_example.py  # Main demo (RUN THIS!)
+│   ├── test_rai_metrics.py       # Test RAI metrics
+│   └── example.py                # Simple baseline examples
+│
+├── data/                          # Medical knowledge base
 │   └── medical_knowledge.py      # Medical documents database (7 documents)
+│
+├── eval_reports/                  # Generated evaluation reports
+│   └── evaluation_*.md           # Markdown reports with criteria
+│
 ├── chroma_db/                     # Vector database (auto-created)
-│
-├── rag_system.py                  # RAG implementation with ChromaDB
-├── llm_client_groq.py             # Groq API wrapper (GPT-OSS 120B)
-├── llm_metrics.py                 # LLM-as-a-Judge metrics (4 metrics)
-├── evaluator.py                   # Evaluation framework with colorized output
-│
-├── medical_assistant_example.py   # Main demo (RUN THIS!)
-├── example.py                     # Simple baseline examples (optional)
-├── metrics.py                     # Simple baseline metrics (optional)
 │
 ├── requirements.txt               # Dependencies
 ├── .env                          # API keys (you create this)
 ├── README.md                     # This file
-└── SETUP_GUIDE.md                # Quick setup instructions
+├── SETUP_GUIDE.md                # Quick setup instructions
+└── eval_report.png               # Sample evaluation output
 ```
 
 ## How It Works
@@ -144,7 +152,7 @@ hallucination-detect/
 **Solution:** Ground responses in verified medical knowledge.
 
 ```python
-from rag_system import initialize_medical_rag
+from src.rag_system import initialize_medical_rag
 
 # Initialize RAG with medical documents
 rag = initialize_medical_rag()
@@ -171,7 +179,7 @@ The RAG system:
 **Solution:** Use another LLM (Groq) to evaluate responses.
 
 ```python
-from llm_metrics import LLMFaithfulness
+from src.llm_metrics import LLMFaithfulness
 
 # Evaluate if response is grounded in context
 metric = LLMFaithfulness()
@@ -196,7 +204,7 @@ print(f"Reasoning: {result['reasoning']}")      # LLM explanation
 **Most Critical Metric for Medical AI**
 
 ```python
-from llm_metrics import LLMFaithfulness
+from src.llm_metrics import LLMFaithfulness
 
 evaluator.add_metric(LLMFaithfulness())
 
@@ -223,7 +231,7 @@ evaluator.add_metric(LLMFaithfulness())
 ### Basic Medical Question
 
 ```python
-from medical_assistant_example import MedicalAssistant
+from examples.medical_assistant_example import MedicalAssistant
 
 assistant = MedicalAssistant()
 
@@ -238,8 +246,8 @@ print(result['retrieved_docs'])  # Source documents used
 ### Evaluate a Response
 
 ```python
-from evaluator import GenAIEvaluator
-from llm_metrics import LLMFaithfulness, LLMBiasDetection
+from src.evaluator import GenAIEvaluator
+from src.llm_metrics import LLMFaithfulness, LLMBiasDetection
 
 evaluator = GenAIEvaluator()
 evaluator.add_metric(LLMFaithfulness())
@@ -257,14 +265,14 @@ evaluator.print_report()
 ### Test Individual Components
 
 ```bash
-# Test RAG system
-python rag_system.py
-
-# Test Groq client
-python llm_client_groq.py
+# Test RAI metrics
+python -m examples.test_rai_metrics
 
 # Test baseline metrics (simple version)
-python example.py
+python -m examples.example
+
+# Run main medical assistant demo
+python -m examples.medical_assistant_example
 ```
 
 ## Student Learning Objectives
@@ -349,7 +357,7 @@ rag = initialize_medical_rag(force_reload=True)
 ### Add Custom Metrics
 
 ```python
-from llm_metrics import LLMMetric
+from src.llm_metrics import LLMMetric
 
 class LLMEmpathy(LLMMetric):
     def __init__(self):

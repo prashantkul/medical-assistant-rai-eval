@@ -3,7 +3,7 @@ Simple Evaluator for running GenAI metrics.
 """
 
 from typing import List, Dict, Any
-from metrics import Metric
+from .metrics import Metric
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table

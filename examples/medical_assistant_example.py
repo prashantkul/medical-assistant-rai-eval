@@ -12,10 +12,10 @@ This example demonstrates a complete pipeline:
    - Bias Detection
 """
 
-from rag_system import initialize_medical_rag
-from llm_client_groq import get_groq_client
-from evaluator import GenAIEvaluator
-from llm_metrics import (
+from src.rag_system import initialize_medical_rag
+from src.llm_client_groq import get_groq_client
+from src.evaluator import GenAIEvaluator
+from src.llm_metrics import (
     LLMFaithfulness,
     LLMAnswerRelevancy,
     LLMToxicity,

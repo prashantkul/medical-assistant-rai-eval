@@ -19,6 +19,16 @@ class Metric(ABC):
         self.name = name
         self.category = category
 
+    def get_criteria(self) -> Dict[str, Any]:
+        """
+        Return the evaluation criteria for this metric.
+        Override in subclasses to provide specific criteria.
+        """
+        return {
+            "description": "No criteria description available",
+            "scoring": []
+        }
+
     @abstractmethod
     def evaluate(self, **kwargs) -> Dict[str, Any]:
         """

@@ -3,8 +3,8 @@ Example usage of the GenAI Evaluation Framework.
 This demonstrates how to use the metrics for evaluating AI-generated content.
 """
 
-from evaluator import GenAIEvaluator
-from metrics import (
+from src.evaluator import GenAIEvaluator
+from src.metrics import (
     AnswerRelevancy,
     Faithfulness,
     ToxicityScore,
