@@ -1,0 +1,16 @@
+# GenAI Evaluation Framework - Medical LLM Assistant
+# Core dependencies
+scikit-learn>=1.3.0
+numpy>=1.24.0
+
+# RAG & Vector Database
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+
+# LLM Integration
+google-generativeai>=0.3.0
+groq>=0.4.0
+
+# Utilities
+python-dotenv>=1.0.0
+tqdm>=4.65.0
