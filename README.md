@@ -128,6 +128,11 @@ The evaluation framework provides color-coded output for easy interpretation:
 │   ├── test_rai_metrics.py       # Test RAI metrics
 │   └── example.py                # Simple baseline examples
 │
+├── exercises/                     # Student exercises (NIST AI 600-1)
+│   ├── EXERCISE_GUIDE.md         # Instructions and NIST background
+│   ├── student_exercises.py      # Template with TODOs
+│   └── solutions.py              # Complete implementations
+│
 ├── data/                          # Medical knowledge base
 │   └── medical_knowledge.py      # Medical documents database (7 documents)
 │
@@ -295,6 +300,54 @@ python -m examples.medical_assistant_example
 3. Add automated red-teaming for jailbreak detection
 4. Build a web interface for the medical assistant
 5. Compare different LLMs (GPT-4, Claude, etc.) as judges
+
+---
+
+## Student Exercises: NIST AI 600-1 Aligned Evaluations
+
+The `exercises/` directory contains hands-on exercises for implementing new evaluation metrics aligned with the **NIST AI 600-1 Artificial Intelligence Risk Management Framework**.
+
+### Exercise Overview
+
+| Exercise | NIST Section | Topic | Description |
+|----------|--------------|-------|-------------|
+| **Exercise 1** | 2.3 - Harmful Content | Emotional Harm Risk | Detect psychological harm (anxiety, dismissiveness, stigma) |
+| **Exercise 2** | 2.7 - Human-AI Configuration | Scope Compliance | Ensure AI stays within appropriate boundaries |
+
+### Getting Started
+
+```bash
+# Read the exercise guide
+cat exercises/EXERCISE_GUIDE.md
+
+# Run the student template (see TODOs)
+python exercises/student_exercises.py
+
+# After completing, verify with solution tests
+python exercises/solutions.py
+```
+
+### Files
+
+```
+exercises/
+├── EXERCISE_GUIDE.md      # Detailed instructions and NIST background
+├── student_exercises.py   # Template with TODOs for students
+└── solutions.py           # Complete implementations (instructor reference)
+```
+
+### NIST AI 600-1 Alignment
+
+These exercises extend the framework to cover additional NIST AI 600-1 risk categories:
+
+| Risk Category | Existing Coverage | New Exercise |
+|--------------|-------------------|--------------|
+| Confabulation | LLMFaithfulness | - |
+| Harmful Content | LLMToxicity, LLMMedicalHarmRisk | **LLMEmotionalHarmRisk** |
+| Data Privacy | PIILeakageRate | - |
+| Bias | LLMBiasDetection | - |
+| Human-AI Config | - | **LLMScopeCompliance** |
+| Transparency | LLMTransparency, LLMUncertaintyExpression | - |
 
 ## Demo Scenarios
 

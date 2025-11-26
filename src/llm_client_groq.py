@@ -67,30 +67,60 @@ class GroqClient:
             print(f"Error generating response: {e}")
             raise
 
-    def evaluate_as_judge(self, evaluation_prompt: str) -> Dict[str, Any]:
+    def evaluate_as_judge(self, evaluation_prompt: str, use_json_mode: bool = True) -> Dict[str, Any]:
         """
         Use LLM as a judge to evaluate content.
 
         Args:
             evaluation_prompt: Structured prompt asking the LLM to evaluate something
+            use_json_mode: If True, request JSON response format for reliable parsing
 
         Returns:
             Dictionary with score and reasoning
         """
         try:
-            response_text = self.generate(evaluation_prompt, temperature=0.0)
+            if use_json_mode:
+                # Append JSON format instruction to prompt
+                json_prompt = evaluation_prompt + """
 
-            # Parse the response to extract score and reasoning
-            # Expected format: Score: X.XX\nReasoning: ...
+IMPORTANT: Respond ONLY with valid JSON in this exact format:
+{"score": <number between 0.0 and 1.0>, "reasoning": "<your explanation>"}
+"""
+                response = self.client.chat.completions.create(
+                    model=self.model_name,
+                    messages=[{"role": "user", "content": json_prompt}],
+                    temperature=0.0,
+                    max_tokens=1024,
+                    response_format={"type": "json_object"}
+                )
+                response_text = response.choices[0].message.content
+
+                # Parse JSON response
+                import json
+                try:
+                    result = json.loads(response_text)
+                    return {
+                        "score": float(result.get("score")) if result.get("score") is not None else None,
+                        "reasoning": result.get("reasoning", ""),
+                        "raw_response": response_text
+                    }
+                except json.JSONDecodeError:
+                    # Fall back to regex parsing if JSON fails
+                    pass
+
+            # Fallback: regex-based parsing
+            response_text = self.generate(evaluation_prompt, temperature=0.0)
             score = None
             reasoning = response_text
 
             # Try to extract score (looking for numbers between 0 and 1)
-            score_match = re.search(r'(?:Score|score):\s*([0-9]*\.?[0-9]+)', response_text)
+            # Handle markdown formatting like **Score:** or *Score:*
+            score_match = re.search(r'\*{0,2}[Ss]core\*{0,2}[:\s]+\*{0,2}([0-9]*\.?[0-9]+)', response_text)
             if score_match:
                 score = float(score_match.group(1))
                 # Extract reasoning (everything after the score line)
-                reasoning_match = re.search(r'(?:Reasoning|reasoning):\s*(.+)', response_text, re.DOTALL)
+                # Handle markdown formatting like **Reasoning:**
+                reasoning_match = re.search(r'\*{0,2}[Rr]easoning\*{0,2}[:\s]+(.+)', response_text, re.DOTALL)
                 if reasoning_match:
                     reasoning = reasoning_match.group(1).strip()
 

@@ -33,3 +33,4 @@ test_results/
 
 # Generated databases
 chroma_db/
+exercises/solutions.py
